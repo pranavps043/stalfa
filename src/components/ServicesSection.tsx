@@ -88,7 +88,8 @@ export const TextStaggerHover = React.memo(React.forwardRef<
   // Optimized transition for instant feel
   const sharedTransition = {
     duration: 0.1,    // Faster animation
-    ease: "easeOut",  // Direct and snappy
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ease: "easeOut" as any,  // Direct and snappy
   }
 
   return (
