@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { HTMLMotionProps, MotionConfig, motion } from "framer-motion"
+import { HTMLMotionProps, motion } from "framer-motion"
 import { cn } from "@/lib/utils"
 
 /* -----------------------------------------------------------
@@ -22,6 +22,7 @@ interface HoverSliderImageProps extends Omit<HTMLMotionProps<"img">, "src"> {
 interface HoverSliderContextValue {
   activeSlide: number
   changeSlide: (index: number) => void
+  isMobile: boolean
 }
 
 function splitText(text: string) {
@@ -41,10 +42,18 @@ function useHoverSliderContext() {
 export const HoverSlider = React.forwardRef<HTMLElement, React.HTMLAttributes<HTMLElement>>(
   ({ children, className, ...props }, ref) => {
     const [activeSlide, setActiveSlide] = React.useState(0)
+    const [isMobile, setIsMobile] = React.useState(false)
     const changeSlide = (i: number) => setActiveSlide(i)
 
+    React.useEffect(() => {
+      const checkIfMobile = () => setIsMobile(window.innerWidth < 1024)
+      checkIfMobile()
+      window.addEventListener('resize', checkIfMobile)
+      return () => window.removeEventListener('resize', checkIfMobile)
+    }, [])
+
     return (
-      <HoverSliderContext.Provider value={{ activeSlide, changeSlide }}>
+      <HoverSliderContext.Provider value={{ activeSlide, changeSlide, isMobile }}>
         <section ref={ref} className={cn("relative", className)} {...props}>
           {children}
         </section>
@@ -55,30 +64,20 @@ export const HoverSlider = React.forwardRef<HTMLElement, React.HTMLAttributes<HT
 
 HoverSlider.displayName = "HoverSlider"
 
-export const TextStaggerHover = React.forwardRef<
+export const TextStaggerHover = React.memo(React.forwardRef<
   HTMLSpanElement,
   React.HTMLAttributes<HTMLSpanElement> & TextStaggerHoverProps
 >(({ text, index, className, ...props }, ref) => {
-  const { activeSlide, changeSlide } = useHoverSliderContext()
-  const { characters } = splitText(text)
+  const { activeSlide, changeSlide, isMobile } = useHoverSliderContext()
+  const { characters } = React.useMemo(() => splitText(text), [text])
   const isActive = activeSlide === index
-  const [isMobile, setIsMobile] = React.useState(false)
-
-  React.useEffect(() => {
-    const checkIfMobile = () => {
-      setIsMobile(window.innerWidth < 768) // md breakpoint
-    }
-    checkIfMobile()
-    window.addEventListener('resize', checkIfMobile)
-    return () => window.removeEventListener('resize', checkIfMobile)
-  }, [])
 
   // For mobile, show plain text without hover effects
   if (isMobile) {
     return (
       <span
         ref={ref}
-        className={cn("block w-full text-left py-2", className)}
+        className={cn("block w-full text-center py-2", className)}
         {...props}
       >
         {text}
@@ -86,51 +85,50 @@ export const TextStaggerHover = React.forwardRef<
     )
   }
 
-  // For desktop, show with hover effects
+  // Optimized transition for instant feel
+  const sharedTransition = {
+    duration: 0.1,    // Faster animation
+    ease: "easeOut",  // Direct and snappy
+  }
+
   return (
     <span
       ref={ref}
       onMouseEnter={() => changeSlide(index)}
-      className={cn("relative inline-block overflow-hidden", className)}
+      className={cn("relative inline-block cursor-default select-none", className)}
       {...props}
     >
       {characters.map((char, i) => (
         <span key={i} className="relative inline-block overflow-hidden">
-          <MotionConfig
-            transition={{
-              delay: i * 0.01,  // Slightly faster delay
-              duration: 0.15,   // Faster animation (reduced from 0.3s)
-              ease: [0.4, 0, 0.2, 1],  // Snappier easing
-            }}
+          <motion.span
+            className="inline-block opacity-20"
+            initial={false}
+            animate={isActive ? { y: "-100%" } : { y: "0%" }}
+            transition={{ ...sharedTransition, delay: i * 0.005 }}
           >
-            <motion.span
-              className="inline-block opacity-20"
-              initial={{ y: "0%" }}
-              animate={isActive ? { y: "-110%" } : { y: "0%" }}
-            >
-              {char}
-              {char === " " && i < characters.length - 1 && <>&nbsp;</>}
-            </motion.span>
+            {char}
+            {char === " " && i < characters.length - 1 && <>&nbsp;</>}
+          </motion.span>
 
-            <motion.span
-              className="absolute left-0 top-0 inline-block opacity-100"
-              initial={{ y: "110%" }}
-              animate={isActive ? { y: "0%" } : { y: "110%" }}
-            >
-              {char}
-            </motion.span>
-          </MotionConfig>
+          <motion.span
+            className="absolute left-0 top-0 inline-block text-[#FFD700]"
+            initial={false}
+            animate={isActive ? { y: "0%" } : { y: "100%" }}
+            transition={{ ...sharedTransition, delay: i * 0.005 }}
+          >
+            {char}
+          </motion.span>
         </span>
       ))}
     </span>
   )
-})
+}))
 
 TextStaggerHover.displayName = "TextStaggerHover"
 
-const clipPathVariants = {
-  visible: { clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)" },
-  hidden: { clipPath: "polygon(0 0, 100% 0, 100% 0, 0 0)" },
+const fadeVariants = {
+  visible: { opacity: 1 },
+  hidden: { opacity: 0 },
 }
 
 export const HoverSliderImageWrap = React.forwardRef<
@@ -153,11 +151,11 @@ export const HoverSliderImage = React.forwardRef<HTMLImageElement, HoverSliderIm
       <motion.img
         ref={ref}
         src={imageUrl}
-        loading="lazy"
-        variants={clipPathVariants}
+        loading="eager"
+        variants={fadeVariants}
         initial="hidden"
         animate={activeSlide === index ? "visible" : "hidden"}
-        transition={{ ease: [0.4, 0, 0.2, 1], duration: 0.3 }}
+        transition={{ ease: "easeInOut", duration: 0.2 }}
         className={cn("absolute inset-0 w-full h-full object-cover", className)}
         {...props}
       />
@@ -211,6 +209,14 @@ const SLIDES = [
 ]
 
 export default function ServicesSection() {
+  // Preload Images for instant hover feedback
+  React.useLayoutEffect(() => {
+    SLIDES.forEach((slide) => {
+      const img = new Image()
+      img.src = slide.imageUrl
+    })
+  }, [])
+
   return (
     <section className="w-full py-12 md:py-20" style={{
       background:

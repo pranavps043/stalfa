@@ -168,6 +168,17 @@ const Contact2 = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
+    
+    // Name fields should not accept numbers or special characters
+    if (name === 'first_name' || name === 'last_name') {
+      const alphabeticValue = value.replace(/[^A-Za-z\s]/g, '');
+      setFormData(prev => ({
+        ...prev,
+        [name]: alphabeticValue
+      }));
+      return;
+    }
+
     setFormData(prev => ({
       ...prev,
       [name]: value
@@ -178,11 +189,39 @@ const Contact2 = () => {
     setIsSubmitting(true);
     setSubmitStatus('idle');
 
+    // Validate blank fields
+    const requiredFields = ['first_name', 'last_name', 'user_email', 'subject', 'message'];
+    const hasBlankFields = requiredFields.some(field => !formData[field as keyof FormData]);
+    
+    if (hasBlankFields) {
+      setSubmitStatus('error');
+      setStatusMessage('Please fill in all required fields');
+      setIsSubmitting(false);
+      return;
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.user_email)) {
+      setSubmitStatus('error');
+      setStatusMessage('Invalid email format. Use local.part@domainname');
+      setIsSubmitting(false);
+      return;
+    }
+
+    const templateParams = {
+      first_name: formData.first_name,
+      last_name: formData.last_name,
+      email: formData.user_email,
+      subject: formData.subject,
+      message: formData.message,
+    };
+
     try {
       const result = await emailjs.send(
         'service_58uv2na',
         'template_x292gcv',
-        formData,
+        templateParams,
         EMAILJS_PUBLIC_KEY
       );
 
@@ -231,14 +270,14 @@ const Contact2 = () => {
           <ul className="ml-4 space-y-2 text-sm sm:text-base">
             <li className="flex items-center gap-2">
               <Phone className="w-4 h-4" />
-              <span>Phone: (123) 34567890</span>
+              <span>Phone: +91 88911 00447</span>
             </li>
             <li className="flex items-center gap-2">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-mail">
                 <rect width="20" height="16" x="2" y="4" rx="2" />
                 <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
               </svg>
-              <span>Email: email@example.com</span>
+              <span>Email: stalfatech@gmail.com</span>
             </li>
             <li className="flex items-center gap-2">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-globe">
@@ -246,7 +285,7 @@ const Contact2 = () => {
                 <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
                 <path d="M2 12h20" />
               </svg>
-              <span>Web: shadcnblocks.com</span>
+              <span>Web: stalfatech.com</span>
             </li>
           </ul>
           
@@ -255,11 +294,13 @@ const Contact2 = () => {
             <p className="text-sm font-bold tracking-wider uppercase mb-3 bg-gradient-to-r from-amber-400 via-yellow-200 to-white text-transparent bg-clip-text">
               Our Location
             </p>
-            <LocationMap 
-              location="Stalfa, TVM" 
-              coordinates="8.5241° N, 76.9366° E"
-              className="w-full max-w-xs mx-auto sm:mx-0"
-            />
+            <a href="https://maps.app.goo.gl/mx7BdHko17UuHGM26" target="_blank" rel="noopener noreferrer" className="block w-full max-w-xs mx-auto sm:mx-0">
+              <LocationMap 
+                location="Stalfa, TVM" 
+                coordinates="8.5241° N, 76.9366° E"
+                className="w-full"
+              />
+            </a>
           </div>
         </div>
 
@@ -268,7 +309,9 @@ const Contact2 = () => {
           <div className="rounded-lg border border-white/25 bg-black/60 backdrop-blur-sm p-4 sm:p-5 space-y-3">
             <div className="flex flex-col sm:flex-row gap-4">
               <div className="w-full sm:w-1/2">
-                <Label htmlFor="first_name" className="text-white/80 text-sm mb-1 block">First Name</Label>
+                <Label htmlFor="first_name" className="text-white/80 text-sm mb-1 block">
+                  First Name <span className="text-amber-400 font-bold">*</span>
+                </Label>
                 <Input 
                   id="first_name" 
                   name="first_name"
@@ -280,7 +323,9 @@ const Contact2 = () => {
                 />
               </div>
               <div className="w-full sm:w-1/2">
-                <Label htmlFor="last_name" className="text-white/80 text-sm mb-1 block">Last Name</Label>
+                <Label htmlFor="last_name" className="text-white/80 text-sm mb-1 block">
+                  Last Name <span className="text-amber-400 font-bold">*</span>
+                </Label>
                 <Input 
                   id="last_name" 
                   name="last_name"
@@ -293,7 +338,9 @@ const Contact2 = () => {
               </div>
             </div>
             <div>
-              <Label htmlFor="user_email" className="text-white/80 text-sm mb-1 block">Email</Label>
+              <Label htmlFor="user_email" className="text-white/80 text-sm mb-1 block">
+                Email <span className="text-amber-400 font-bold">*</span>
+              </Label>
               <Input 
                 id="user_email" 
                 name="user_email"
@@ -306,7 +353,9 @@ const Contact2 = () => {
               />
             </div>
             <div>
-              <Label htmlFor="subject" className="text-white/80 text-sm mb-1 block">Subject</Label>
+              <Label htmlFor="subject" className="text-white/80 text-sm mb-1 block">
+                Subject <span className="text-amber-400 font-bold">*</span>
+              </Label>
               <Input 
                 id="subject" 
                 name="subject"
@@ -318,7 +367,9 @@ const Contact2 = () => {
               />
             </div>
             <div>
-              <Label htmlFor="message" className="text-white/80 text-sm mb-1 block">Message</Label>
+              <Label htmlFor="message" className="text-white/80 text-sm mb-1 block">
+                Message <span className="text-amber-400 font-bold">*</span>
+              </Label>
               <Textarea 
                 id="message" 
                 name="message"
@@ -558,7 +609,7 @@ export default function ContactPage() {
                 Let&apos;s connect
               </p>
               <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold bg-gradient-to-r from-amber-400 via-yellow-200 to-white text-transparent bg-clip-text" style={{ marginBottom: '-46px' }}>
-                Get in Touch
+                Get In Touch
               </h1>
             </div>
           }

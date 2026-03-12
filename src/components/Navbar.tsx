@@ -33,6 +33,7 @@ import React, {
 
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
+import Link from 'next/link';
 
 /* -------------------- DATA -------------------- */
 const data = [
@@ -295,14 +296,13 @@ export default function Navbar() {
   const [isVisible, setIsVisible] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [prevScrollPos, setPrevScrollPos] = useState(0);
-  const [activePath, setActivePath] = useState('/');
+  const [activePath, setActivePath] = useState(() => 
+    typeof window !== 'undefined' ? window.location.pathname : '/'
+  );
   const navbarRef = useRef<HTMLDivElement>(null);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
 
-  // Set active path on mount and update on navigation
-  useEffect(() => {
-    setActivePath(window.location.pathname);
-  }, []);
+
 
   // Check if mobile/tablet view
   useEffect(() => {
@@ -455,26 +455,26 @@ export default function Navbar() {
         variants={logoVariants}
         transition={transition}
       >
-        <div className="flex items-center">
+        <Link href="/" className="flex items-center cursor-pointer">
           <motion.div 
-            className="h-28 w-28 rounded-full p-1.5"
+            className="h-20 w-20 p-1.5"
             whileHover={{ 
               scale: 1.05,
               rotate: [0, -2, 2, 0],
               transition: { duration: 0.5 }
             }}
           >
-            <div className="bg-transparent w-full h-full rounded-full flex items-center justify-center overflow-hidden relative">
+            <div className="bg-transparent w-full h-full flex items-center justify-center relative">
               <Image
-                src="/logo.png"
+                src="/logos.png"
                 alt="STALFA Logo"
                 fill
-                className="object-cover"
+                className="object-contain"
                 priority
               />
             </div>
           </motion.div>
-        </div>
+        </Link>
       </motion.div>
 
       {/* Desktop Navigation - Hidden below 1280px (xl) */}

@@ -75,7 +75,7 @@ export default function Blog() {
               <div className="md:w-1/4 text-right flex items-center justify-end gap-8">
                 <div className="hidden lg:block text-left">
                     <p className="text-sm font-mono opacity-30 group-hover:opacity-100 transition-opacity">{post.date}</p>
-                    <p className="text-[10px] opacity-20 uppercase tracking-tighter">{post.tag}</p>
+                    <p className="text-[10px] text-white/20 uppercase tracking-tighter transition-colors group-hover:text-yellow-400 group-hover:opacity-100">{post.tag}</p>
                 </div>
                 <div className="h-12 w-12 rounded-full border border-white/10 flex items-center justify-center opacity-0 scale-50 group-hover:opacity-100 group-hover:scale-100 transition-all duration-300">
                     <span className="text-xl">↗</span>

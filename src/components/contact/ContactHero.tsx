@@ -203,7 +203,7 @@ export default function ContactHero() {
     <section className="relative h-[50vh] md:h-[70vh] w-full bg-black flex flex-col items-center justify-center overflow-hidden">     
       <div className="relative z-20 flex flex-col items-center gap-4 px-4 mt-25 text-center">
         <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white">
-                       <span className="text-yellow-300">C</span>ontact<span className="text-yellow-300">U</span>s
+                       <span className="text-yellow-300">C</span>ontact <span className="text-yellow-300">U</span>s
         </h1>
       <p className="text-neutral-400 max-w-xl">
   Ready to start your next project? Our team is here to help you bring your vision to life with innovative solutions.

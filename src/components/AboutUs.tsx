@@ -27,19 +27,27 @@ export function FeatureSteps({
   autoPlayInterval = 3000, // 3 seconds
   imageHeight = "h-[400px]",
 }: FeatureStepsProps) {
-  const [currentFeature, setCurrentFeature] = useState(0);
-  const [isHovered, setIsHovered] = useState(false);
+  const [currentFeature, setCurrentFeature] = useState(0)
+  const [isHovered, setIsHovered] = useState(false)
+
+  // --- Preload Images for instant feedback ---
+  useEffect(() => {
+    features.forEach((feature) => {
+      const img = document.createElement("img")
+      img.src = feature.image
+    })
+  }, [features])
 
   // --- AutoPlay Logic ---
   useEffect(() => {
-    if (isHovered) return;
+    if (isHovered) return
 
     const timeout = setTimeout(() => {
-      setCurrentFeature((prev) => (prev + 1) % features.length);
-    }, autoPlayInterval);
+      setCurrentFeature((prev) => (prev + 1) % features.length)
+    }, autoPlayInterval)
 
-    return () => clearTimeout(timeout);
-  }, [currentFeature, isHovered, autoPlayInterval, features.length]);
+    return () => clearTimeout(timeout)
+  }, [currentFeature, isHovered, autoPlayInterval, features.length])
 
   return (
     <div
@@ -51,7 +59,6 @@ export function FeatureSteps({
       onMouseLeave={() => setIsHovered(false)}
     >
       <div className="px-4 md:px-8">
-
         {/* FIXED GRADIENT HEADING */}
         <div className="mb-10 text-center">
           <h2
@@ -66,7 +73,6 @@ export function FeatureSteps({
         </div>
 
         <div className="flex flex-col md:grid md:grid-cols-2 gap-6 md:gap-10">
-
           {/* LEFT SIDE — STEPS LIST */}
           <div className="order-2 md:order-1 space-y-8">
             {features.map((feature, index) => (
@@ -75,7 +81,7 @@ export function FeatureSteps({
                 className="flex items-center gap-6 md:gap-8 cursor-pointer"
                 initial={{ opacity: 0.3 }}
                 animate={{ opacity: index === currentFeature ? 1 : 0.3 }}
-                transition={{ duration: 0.5 }}
+                transition={{ duration: 0.3 }}
                 onClick={() => setCurrentFeature(index)}
               >
                 {/* Number Circle */}
@@ -114,14 +120,14 @@ export function FeatureSteps({
               imageHeight
             )}
           >
-            <AnimatePresence mode="wait">
+            <AnimatePresence mode="popLayout">
               <motion.div
                 key={currentFeature}
-                className="absolute inset-0 rounded-lg overflow-hidden z-10"
-                initial={{ opacity: 0, y: 80, rotateX: -20 }}
-                animate={{ opacity: 1, y: 0, rotateX: 0 }}
-                exit={{ opacity: 0, y: -80, rotateX: 20 }}
-                transition={{ duration: 0.5 }}
+                className="absolute inset-0 rounded-lg overflow-hidden"
+                initial={{ opacity: 0, scale: 1.05 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
               >
                 <Image
                   src={features[currentFeature].image}
@@ -129,8 +135,9 @@ export function FeatureSteps({
                   className="w-full h-full object-cover"
                   width={1000}
                   height={500}
+                  priority={currentFeature === 0}
+                  loading={currentFeature === 0 ? "eager" : "lazy"}
                 />
-                {/* The dark overlay—Now pushed BACK (won't affect heading) */}
                 <div className="absolute bottom-0 left-0 right-0 h-2/3 
                     bg-gradient-to-t from-background via-background/50 to-transparent 
                     pointer-events-none z-0"
@@ -138,11 +145,10 @@ export function FeatureSteps({
               </motion.div>
             </AnimatePresence>
           </div>
-
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 /* ------------------------------------------

@@ -289,6 +289,27 @@ export default function CareerPage() {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
+    
+    // Strict Alphabetic validation for name fields
+    if (name === 'firstName' || name === 'lastName') {
+      const alphabeticValue = value.replace(/[^A-Za-z\s]/g, '');
+      setFormData(prev => ({
+        ...prev,
+        [name]: alphabeticValue
+      }));
+      return;
+    }
+
+    // Strict Digit validation and limit for phone
+    if (name === 'phone') {
+      const numericValue = value.replace(/\D/g, '').slice(0, 10);
+      setFormData(prev => ({
+        ...prev,
+        [name]: numericValue
+      }));
+      return;
+    }
+
     setFormData(prev => ({
       ...prev,
       [name]: value
@@ -318,10 +339,9 @@ export default function CareerPage() {
         throw new Error('Please enter a valid email address');
       }
       
-      // Validate phone number format (basic validation for international numbers)
-      const phoneRegex = /^\+?[0-9\s-]{10,}$/;
-      if (!phoneRegex.test(formData.phone)) {
-        throw new Error('Please enter a valid phone number (e.g., +91 1234567890)');
+      // Validate phone number length (Exactly 10 digits)
+      if (formData.phone.length !== 10) {
+        throw new Error('Phone number must be exactly 10 digits');
       }
 
       // Create template parameters - make sure these match your EmailJS template variables exactly
@@ -425,7 +445,7 @@ export default function CareerPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
           >
-            Careers
+            <span className="text-yellow-300">C</span>areers
           </motion.h1>
           <motion.p 
             className="text-neutral-400 max-w-xl"

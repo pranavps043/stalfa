@@ -204,7 +204,7 @@ export default function AboutusHero() {
 
       <div className="relative z-20 flex flex-col items-center gap-4 px-4 mt-30 text-center">
       <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white">
-  <span className="text-yellow-300">A</span>bout<span className="text-yellow-300">U</span>s
+  <span className="text-yellow-300">A</span>bout <span className="text-yellow-300">U</span>s
 </h1>
       <p className="text-neutral-400 max-w-xl">
   Get to know the passionate team behind our innovative solutions and our commitment to excellence in digital transformation.

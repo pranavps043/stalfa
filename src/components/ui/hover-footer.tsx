@@ -153,19 +153,10 @@ export default function HoverFooter() {
       title: "Links",
       links: [
         { label: "Home", href: "/" },
-        { label: "About Us", href: "/about-us" },
+        { label: "About Us", href: "/about" },
         { label: "Careers", href: "/careers" },
         { label: "Services", href: "/services" },
         { label: "Contact Us", href: "/contact" },
-      ],
-    },
-    {
-      title: "Company",
-      links: [
-        { label: "Privacy Policy", href: "#" },
-        { label: "Terms of Service", href: "#" },
-        { label: "Cookie Policy", href: "#" },
-        { label: "Security", href: "#" },
       ],
     },
   ];
@@ -173,25 +164,25 @@ export default function HoverFooter() {
   const contactInfo: ContactItem[] = [
     {
       icon: <Mail size={18} className="text-[#FFD700]" />,
-      text: "info@stalfa.com",
-      href: "mailto:info@stalfa.com",
+      text: "stalfatech@gmail.com",
+      href: "mailto:stalfatech@gmail.com",
     },
     {
       icon: <Phone size={18} className="text-[#FFD700]" />,
-      text: "+91 86373 73116",
-      href: "tel:+918637373116",
+      text: "+91 88911 00447",
+      href: "tel:+918891100447",
     },
     {
       icon: <MapPin size={18} className="text-[#FFD700]" />,
       text: "Kerala, India",
+      href: "https://maps.app.goo.gl/mx7BdHko17UuHGM26",
     },
   ];
 
   const socialLinks: SocialLink[] = [
     { icon: <Facebook size={20} />, href: "#" },
     { icon: <Instagram size={20} />, href: "https://www.instagram.com/stalfatech?igsh=MXBreXE2MmR5eWxkcw==" },
-    { icon: <Twitter size={20} />, href: "#" },
-    { icon: <Linkedin size={20} />, href: "#" },
+    { icon: <Linkedin size={20} />, href: "https://www.linkedin.com/company/stalfa-tech-private-limited/" },
   
   ];
 
@@ -216,21 +207,21 @@ export default function HoverFooter() {
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 flex flex-col h-full">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 flex-grow">
-          <div className="col-span-2 lg:col-span-1 space-y-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 lg:gap-8 flex-grow">
+          <div className="space-y-4 text-left">
             <span className="text-white text-3xl font-bold">Stalfa</span>
-            <p className="text-gray-300 text-sm">
+            <p className="text-gray-300 text-sm max-w-xs">
               Stalfa Tech provides modern web solutions, 3D experiences and
               high-quality UI.
             </p>
           </div>
 
           {footerLinks.map((section) => (
-            <div key={section.title}>
+            <div key={section.title} className="lg:text-center">
               <h4 className="text-white text-lg font-semibold mb-6">
                 {section.title}
               </h4>
-              <ul className="space-y-3">
+              <ul className="space-y-3 inline-block lg:text-left">
                 {section.links.map((link) => (
                   <li key={link.label} className="relative">
                     <a
@@ -248,24 +239,26 @@ export default function HoverFooter() {
             </div>
           ))}
 
-          <div>
+          <div className="lg:text-right">
             <h4 className="text-white text-lg font-semibold mb-6">
               Contact Us
             </h4>
-            <ul className="space-y-4">
+            <ul className="space-y-4 flex flex-col lg:items-end">
               {contactInfo.map((item, i) => (
-                <li key={i} className="flex items-center space-x-3">
-                  {item.icon}
-                  {item.href ? (
-                    <a
-                      href={item.href}
-                      className="hover:text-[#FFD700]"
-                    >
-                      {item.text}
-                    </a>
-                  ) : (
-                    <span>{item.text}</span>
-                  )}
+                <li key={i} className="flex items-center space-x-3 lg:space-x-reverse">
+                  <div className="flex items-center space-x-3">
+                    {item.icon}
+                    {item.href ? (
+                      <a
+                        href={item.href}
+                        className="hover:text-[#FFD700]"
+                      >
+                        {item.text}
+                      </a>
+                    ) : (
+                      <span>{item.text}</span>
+                    )}
+                  </div>
                 </li>
               ))}
             </ul>
