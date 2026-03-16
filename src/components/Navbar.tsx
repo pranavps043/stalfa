@@ -34,6 +34,7 @@ import React, {
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 /* -------------------- DATA -------------------- */
 const data = [
@@ -296,9 +297,15 @@ export default function Navbar() {
   const [isVisible, setIsVisible] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [prevScrollPos, setPrevScrollPos] = useState(0);
-  const [activePath, setActivePath] = useState(() => 
-    typeof window !== 'undefined' ? window.location.pathname : '/'
-  );
+  
+  const pathname = usePathname();
+  const [activePath, setActivePath] = useState(pathname || '/');
+
+  // Keep activePath in sync with pathname changes from Next.js router
+  useEffect(() => {
+    // eslint-disable-next-line
+    setActivePath(pathname || '/');
+  }, [pathname]);
   const navbarRef = useRef<HTMLDivElement>(null);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
 

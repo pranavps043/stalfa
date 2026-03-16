@@ -224,8 +224,7 @@ export default function ServicesSection() {
         "linear-gradient(to bottom, #000000 0%, #0d0d0d 15%, #00000000 100%)"
     }}>
       <HoverSlider className="w-full min-h-[50vh] md:min-h-[60vh] flex flex-col items-center px-4 sm:px-6 md:px-12">
-        <h2 className="text-center mb-8 md:mb-12 text-4xl sm:text-5xl font-bold bg-clip-text text-transparent 
-          bg-gradient-to-b from-[#fffac7] via-[#ffd700] to-[#b8860b] text-balance">
+        <h2 className="text-center mb-8 md:mb-12 text-4xl sm:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-[#fffac7] via-[#ffd700] to-[#b8860b] text-balance">
           Our Services
         </h2>
 

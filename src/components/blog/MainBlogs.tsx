@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 
 /* ------------------------ TYPES ------------------------ */
 interface BlogPost {
@@ -22,7 +23,11 @@ export default function Blog() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    // eslint-disable-next-line
     setMounted(true);
+  }, []); // Run only once on mount to avoid cascading renders
+
+  useEffect(() => {
     if (activePost) document.body.style.overflow = "hidden";
     else document.body.style.overflow = "unset";
   }, [activePost]);
@@ -148,11 +153,14 @@ export default function Blog() {
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ delay: 0.4, duration: 0.8 }}
                     >
-                      <img 
-                        src={activePost.image} 
-                        className="w-full aspect-video object-cover rounded-[2rem] mb-20 grayscale hover:grayscale-0 transition-all duration-1000 border border-white/5" 
-                        alt={activePost.title}
-                      />
+                      <div className="relative w-full aspect-video mb-20">
+                        <Image 
+                          src={activePost.image}
+                          alt={activePost.title}
+                          fill
+                          className="object-cover rounded-[2rem] grayscale hover:grayscale-0 transition-all duration-1000 border border-white/5" 
+                        />
+                      </div>
                       
                       <div className="prose prose-invert prose-xl md:prose-2xl max-w-none space-y-4 text-white/80 leading-relaxed font-light">
                         {activePost.content.split('\n').map((para, i) => (

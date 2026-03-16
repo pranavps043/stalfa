@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import { motion } from "framer-motion";
 
 /* =====================================================
     TYPEWRITER COMPONENT
@@ -45,7 +44,7 @@ function Typewriter({
       }
     }, isDeleting ? deleteSpeed : speed);
     return () => clearTimeout(timeout);
-  }, [charIndex, displayText, isDeleting, textIndex, text]);
+  }, [charIndex, displayText, isDeleting, textIndex, text, delay, deleteSpeed, speed]);
 
   return (
     <span className={className}>
@@ -72,7 +71,14 @@ const accordionItems = [
 /* -------------------------------------------------------
     DESKTOP ACCORDION ITEM
 ------------------------------------------------------- */
-function AccordionItem({ item, isActive, onMouseEnter }: { item: any; isActive: boolean; onMouseEnter: () => void }) {
+interface AccordionItemData {
+  id: number;
+  title: string;
+  description: string;
+  imageUrl: string;
+}
+
+function AccordionItem({ item, isActive, onMouseEnter }: { item: AccordionItemData; isActive: boolean; onMouseEnter: () => void }) {
   return (
     <div
       onMouseEnter={onMouseEnter}

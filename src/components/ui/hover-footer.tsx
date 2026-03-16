@@ -8,10 +8,7 @@ import {
   MapPin,
   Facebook,
   Instagram,
-  Twitter,
-  Dribbble,
   Linkedin,
-  Globe,
 } from "lucide-react";
 
 /* -------------------------------------------------------------------------- */

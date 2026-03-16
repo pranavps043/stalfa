@@ -84,9 +84,7 @@ function TestimonialCarousel({
           return (
             <motion.div
               key={testimonial.id}
-              className="absolute w-full h-full rounded-2xl md:rounded-3xl overflow-hidden 
-                bg-gradient-to-br from-[#0b0b0b] to-[#121212] 
-                border border-[#FFD700]/20 shadow-[0_5px_30px_rgba(255,215,0,0.12)]"
+              className="absolute w-full h-full rounded-2xl md:rounded-3xl overflow-hidden bg-gradient-to-br from-[#0b0b0b] to-[#121212] border border-[#FFD700]/20 shadow-[0_5px_30px_rgba(255,215,0,0.12)]"
               style={{ zIndex: isCurrent ? 5 : isPrev ? 3 : 1 }}
               drag={isCurrent && !disableInteractions && externalIndex === undefined ? "x" : false}
               dragConstraints={{ left: 0, right: 0 }}
@@ -165,11 +163,7 @@ export function ChooseUs() {
       onMouseLeave={() => setIsHovered(false)}
     >
       <div className="relative z-10 container mx-auto px-4 md:px-6 text-center">
-        <h2
-          className="text-3xl md:text-5xl font-bold 
-          bg-clip-text text-transparent 
-          bg-gradient-to-b from-[#fffac7] via-[#ffd700] to-[#b8860b] text-balance"
-        >
+        <h2 className="text-3xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-[#fffac7] via-[#ffd700] to-[#b8860b] text-balance">
           Why Choose Us
         </h2>
 

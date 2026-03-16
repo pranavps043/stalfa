@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -146,11 +147,13 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({
             style={{ transformStyle: "preserve-3d" }}
           >
             <div className="relative overflow-hidden rounded-lg w-full">
-              <img
+              <Image
                 src={testimonial.imgSrc}
                 alt={testimonial.by}
+                width={800} // Added width
+                height={500} // Added height
                 className="w-full h-[160px] sm:h-[180px] md:h-[220px] rounded-lg mx-auto object-cover transition-transform duration-1000 group-hover:scale-[1.07]"
-                loading="lazy"
+                priority={true} // Changed to priority for LCP, or could be loading="lazy"
                 style={{
                   transform: "translateZ(0)",
                   boxShadow: "0 20px 40px -10px rgba(0,0,0,0.5)",
@@ -158,17 +161,8 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({
                   willChange: "transform",
                   imageRendering: "auto",
                 }}
-                srcSet={
-                  testimonial.imgSrc.startsWith("http")
-                    ? `${testimonial.imgSrc} 2000w`
-                    : undefined
-                }
-                sizes="(max-width: 640px) 100vw, 360px"
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  target.onerror = null;
-                  target.src = "/placeholder-image.jpg";
-                }}
+                // srcSet and sizes are automatically handled by next/image
+                // onError is not typically used with next/image as it handles errors internally
               />
             </div>
           </div>

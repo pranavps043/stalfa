@@ -61,13 +61,7 @@ export function FeatureSteps({
       <div className="px-4 md:px-8">
         {/* FIXED GRADIENT HEADING */}
         <div className="mb-10 text-center">
-          <h2
-            className="
-              text-3xl md:text-4xl lg:text-5xl font-bold
-              bg-gradient-to-b from-[#fffac7] via-[#ffd700] to-[#b8860b]
-              bg-clip-text text-transparent inline-block text-balance
-            "
-          >
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-b from-[#fffac7] via-[#ffd700] to-[#b8860b] bg-clip-text text-transparent inline-block text-balance">
             {title}
           </h2>
         </div>
@@ -138,10 +132,7 @@ export function FeatureSteps({
                   priority={currentFeature === 0}
                   loading={currentFeature === 0 ? "eager" : "lazy"}
                 />
-                <div className="absolute bottom-0 left-0 right-0 h-2/3 
-                    bg-gradient-to-t from-background via-background/50 to-transparent 
-                    pointer-events-none z-0"
-                />
+                <div className="absolute bottom-0 left-0 right-0 h-2/3 bg-gradient-to-t from-background via-background/50 to-transparent pointer-events-none z-0" />
               </motion.div>
             </AnimatePresence>
           </div>
